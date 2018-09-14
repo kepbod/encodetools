@@ -6,7 +6,6 @@ import requests
 import requests.compat
 
 __author__ = 'Xiao-Ou Zhang <kepbod@gmail.com>'
-__all__ = ['Entry']
 
 
 # use ujson if possible
@@ -21,6 +20,7 @@ class Entry(object):
     '''
     Meta class of ENCODE entry
     '''
+
     def __init__(self, eid, etype=None, json_d=None):
         if etype is None:  # in case use meta class directly
             raise Exception('etype should not be None!')
