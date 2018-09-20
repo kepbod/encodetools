@@ -26,17 +26,17 @@ class Entry(object):
             raise Exception('etype should not be None!')
         # basic info
         self.accession = eid
-        self.id = '/%s/%s/' % (etype, eid)
-        self.baseurl = 'https://www.encodeproject.org/'
-        self.url = requests.compat.urljoin(self.baseurl, self.id)
+        self._id = '/%s/%s/' % (etype, eid)
+        self._baseurl = 'https://www.encodeproject.org/'
+        self.url = requests.compat.urljoin(self._baseurl, self._id)
         # available attributes
-        self.attr = {'accession': 'Accession ID',
+        self._attr = {'accession': 'Accession ID',
                      'url': 'URL'}
         # parse json
         if json_d is None:
-            self.json = self._fetch_json()  # fetch json form ENCODE
+            self._json = self._fetch_json()  # fetch json form ENCODE
         else:
-            self.json = json_d
+            self._json = json_d
 
     def _fetch_json(self):
         '''
@@ -50,12 +50,18 @@ class Entry(object):
         '''
         List all the available infomation
         '''
-        info = []
-        for key in self.__dict__:
-            if key in self.attr:
-                info.append('{}: {}'.format(self.attr[key],
-                                            self.__dict__[key]))
-        return '\n'.join(info)
+        return '\n'.join('{}: {}'.format(self._attr[key],
+                                         self.__dict__[key])
+                         for key in self.__dict__
+                         if key in self._attr)
 
     def __repr__(self):
         return self.__str__()
+
+    @property
+    def attributes(self):
+        '''
+        List all the available attributes
+        '''
+        print('\n'.join('{}: {}'.format(key, self._attr[key])
+                        for key in self._attr))
