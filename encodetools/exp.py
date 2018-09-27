@@ -14,7 +14,7 @@ class Exp(Entry):
     '''
 
     def __init__(self, exp, parse=True):
-        if exp.startswith('ENCSR'): # in case exp is not an experiment ID
+        if not exp.startswith('ENCSR'): # in case exp is not an experiment ID
             raise Exception('{} is not one experiment ID!'.format(exp))
         entry_type = 'experiments'
         super(Exp, self).__init__(exp, entry_type)
@@ -40,3 +40,10 @@ class Exp(Entry):
                            'biosample': 'Biosample',
                            'biosample_type': 'Biosample Type',
                            'biosample_id': 'Biosample ID'})
+
+    def fetch_control(self):
+        controls = self._json['possible_controls'] 
+        if controls:
+            return [ctrl['accession'] for ctrl in controls] 
+        else:
+            return None
