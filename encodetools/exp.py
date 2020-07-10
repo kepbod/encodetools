@@ -14,7 +14,7 @@ class Exp(Entry):
     '''
 
     def __init__(self, exp, parse=True):
-        if not exp.startswith('ENCSR'): # in case exp is not an experiment ID
+        if not exp.startswith('ENCSR'):  # in case exp is not an experiment ID
             raise Exception('{} is not one experiment ID!'.format(exp))
         entry_type = 'experiments'
         super(Exp, self).__init__(exp, entry_type)
