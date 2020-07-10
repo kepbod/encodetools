@@ -16,7 +16,7 @@ class SeqFile(Entry):
     '''
 
     def __init__(self, fid, json_d=None, assay=None):
-        if not fid.startswith('ENCFF'): # in case fid is not a file ID
+        if not fid.startswith('ENCFF'):  # in case fid is not a file ID
             raise Exception('{} is not one file ID!'.format(fid))
         entry_type = 'file'
         super(SeqFile, self).__init__(fid, entry_type, json_d=json_d)
@@ -58,6 +58,7 @@ class RawFile(SeqFile):
         self._attr.update({'run_type': 'Run Type',
                            'read_length': 'Read Length',
                            'read_count': 'Read Count'})
+
 
 class ProcessedFile(SeqFile):
     '''
