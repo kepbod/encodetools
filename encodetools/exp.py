@@ -3,9 +3,12 @@ ENCODE experiment classes
 https://www.encodeproject.org/profiles/experiment.json
 '''
 
+import sys
 from .metadata import Entry
+from .expfile import RawFile, ProcessedFile
 
 __author__ = 'Xiao-Ou Zhang <kepbod@gmail.com>'
+__all__ = ['Exp']
 
 
 class Exp(Entry):
@@ -41,9 +44,46 @@ class Exp(Entry):
                            'biosample_type': 'Biosample Type',
                            'biosample_id': 'Biosample ID'})
 
+    def fetch_file(self, process_type='all', file_type=None):
+        file_json = self._json['files']
+        for f in file_json:
+            fid = f['accession']
+            if file_type is not None:
+                if isinstance(file_type, list):
+                    if f['file_type'] in file_type:
+                        if f['file_type'] == 'fastq':
+                            yield RawFile(fid, json_d=f, assay=self.assay)
+                        else:
+                            yield ProcessedFile(fid, json_d=f,
+                                                assay=self.assay)
+                elif file_type == f['file_type']:
+                    if f['file_type'] == 'fastq':
+                        yield RawFile(fid, json_d=f, assay=self.assay)
+                    else:
+                        yield ProcessedFile(fid, json_d=f, assay=self.assay)
+            elif process_type in ['all', 'raw', 'processed']:
+                if f['output_category'] == 'raw data':
+                    is_raw = True
+                else:
+                    is_raw = False
+                if process_type == 'raw':
+                    if is_raw:
+                        yield RawFile(fid, json_d=f, assay=self.assay)
+                elif process_type == 'processed':
+                    if not is_raw:
+                        yield ProcessedFile(fid, json_d=f, assay=self.assay)
+                else:
+                    if is_raw:
+                        yield RawFile(fid, json_d=f, assay=self.assay)
+                    else:
+                        yield ProcessedFile(fid, json_d=f, assay=self.assay)
+            else:
+                sys.exit('If you did not assign file_type, ' +
+                         'process_type should be "all", "raw" or "processed"')
+
     def fetch_control(self):
-        controls = self._json['possible_controls'] 
+        controls = self._json['possible_controls']
         if controls:
-            return [ctrl['accession'] for ctrl in controls] 
+            return [ctrl['accession'] for ctrl in controls]
         else:
             return None

@@ -5,9 +5,9 @@ https://www.encodeproject.org/profiles/file.json
 
 import requests.compat
 from .metadata import Entry
-from .exp import Exp
 
 __author__ = 'Xiao-Ou Zhang <kepbod@gmail.com>'
+__all__ = ['RawFile', 'ProcessedFile']
 
 
 class SeqFile(Entry):
@@ -22,10 +22,7 @@ class SeqFile(Entry):
         super(SeqFile, self).__init__(fid, entry_type, json_d=json_d)
         # experiment info
         self.exp = self._json['dataset'].split('/')[2]
-        if assay is not None:
-            self.assay = assay
-        else:
-            self.assay = Exp(self.exp, parse=False).assay
+        self.assay = assay
         # file info
         self.file_format = self._json['file_format']
         self.output_type = self._json['output_type']
