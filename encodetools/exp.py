@@ -32,17 +32,13 @@ class Exp(Entry):
         self.description = self._json['description']
         # biosample info
         self.biosample = self._json['biosample_summary']
-        self.biosample_type = self._json['biosample_type']
-        self.biosample_id = self._json['biosample_term_id']
         # target
         if 'target' in self._json:
             self.target = self._json['target']['label']
             self._attr.update({'target': 'Target'})
         # update available attributes
         self._attr.update({'description': 'Description',
-                           'biosample': 'Biosample',
-                           'biosample_type': 'Biosample Type',
-                           'biosample_id': 'Biosample ID'})
+                           'biosample': 'Biosample'})
 
     def fetch_file(self, process_type='all', file_type=None):
         file_json = self._json['files']
