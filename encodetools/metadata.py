@@ -31,7 +31,7 @@ class Entry(object):
         self.url = requests.compat.urljoin(self._baseurl, self._id)
         # available attributes
         self._attr = {'accession': 'Accession ID',
-                     'url': 'URL'}
+                      'url': 'URL'}
         # parse json
         if json_d is None:
             self._json = self._fetch_json()  # fetch json form ENCODE
